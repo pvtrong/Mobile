@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Project2.1",
-    "slug": "Project2.1",
+    "name": "project2",
+    "slug": "project2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
