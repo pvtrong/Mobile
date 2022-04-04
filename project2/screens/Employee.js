@@ -1,34 +1,82 @@
 import React from "react";
-import { View, Text, FlatList } from "react-native";
-import axios from "axios";
-import Convert from "../commons/utils/convert";
-import { Config } from "../config/config";
-
+import { View, Text, FlatList, StyleSheet, ScrollView, Image } from "react-native";
+import { GenderEnum } from "../commons/enums/gender.enum";
 export default class Category extends React.Component {
 	constructor(props) {
 		super(props);
 		props.navigation.setOptions({
-			title: props.route.params.name,
+			title: props.route.params.employee.EmployeeName,
 		});
 	}
+
 	render() {
 		const { route } = this.props;
+		let image;
+		switch (route.params.employee.Gender) {
+			case GenderEnum.female: {
+				image = require("../assets/image/woman.png");
+				break;
+			}
+			case GenderEnum.male: {
+				image = require("../assets/image/man.png");
+				break;
+			}
+			default: {
+				image = require("../assets/image/man.png");
+				break;
+			}
+		}
+
 		return (
-			// <FlatList
-			// 	data={employees}
-			// 	renderItem={({ item }) => (
-			// 		<EmployeeListItem
-			// 			employee={item}
-			// 			onPress={() => navigation.navigate("Employee")}
-			// 		/>
-			// 	)}
-			// 	keyExtractor={(item) => `${item.EmployeeId}`}
-			// 	contentContainerStyle={{
-			// 		paddingLeft: 16,
-			// 		paddingRight: 16,
-			// 	}}
-			// ></FlatList>
-            <View><Text>Ten cau thu</Text></View>
+			<ScrollView>
+				{/* <TouchableOpacity activeOpacity={0.5} > */}
+				<View style={styles.employeeItem}>
+					<Image style={styles.employeeImage} source={image}></Image>
+					<Text style={styles.employeeName}>{route.params.employee.EmployeeName}</Text>
+				</View>
+                <View style={styles.employeeItem}>
+                <Text style={styles.label}>{"Giới tính"}</Text><Text style={styles.employeeName}>{route.params.employee.GenderName}</Text>
+				</View>
+				{/* </TouchableOpacity> */}
+			</ScrollView>
 		);
 	}
 }
+
+const styles = StyleSheet.create({
+	employeeItem: {
+		width: "100%",
+		alignItems: "center",
+		marginTop: 10,
+		marginBottom: 10,
+		flex: 2,
+		backgroundColor: "#fff",
+		borderRadius: 8,
+		shadowColor: "#000",
+		shadowOpacity: 0.3,
+		shadowRadius: 10,
+		shadowOffset: { width: 0, height: 0 },
+		padding: 16,
+		flexDirection: "row",
+	},
+    label: {
+        textTransform: "uppercase",
+		marginBottom: 8,
+		fontWeight: "700",
+        marginRight: 'auto'
+    },
+	employeeImage: {
+		width: 64,
+		height: 64,
+		marginRight: 20,
+	},
+	employeeName: {
+		textTransform: "uppercase",
+		marginBottom: 8,
+		fontWeight: "700",
+	},
+	employeeJob: {
+		textTransform: "uppercase",
+		marginBottom: 8,
+	},
+});

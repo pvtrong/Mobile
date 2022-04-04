@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, Button } from "react-native";
 import axios from "axios";
 import EmployeeListItem from "../components/EmployeeListItem";
 import { PagingEnum } from "../commons/enums/paging.enum";
@@ -17,9 +17,7 @@ export default class Category extends React.Component {
 			filter: {
 				pageSize: PagingEnum.first,
 				pageNumber: 1,
-				employeeFilter: '',
-				departmentId: '',
-				positionId: '',
+                departmentId: props.route.params.departmentId
 			},
 		};
 	}
@@ -27,35 +25,43 @@ export default class Category extends React.Component {
 		const { route, navigation } = this.props;
 		const { employees } = this.state;
 		return (
-			<FlatList
-				data={employees}
-				renderItem={({ item }) => (
-					<EmployeeListItem
-						employee={item}
-						onPress={() => navigation.navigate("Employee", {employee: item}) }
-					/>
-				)}
-				keyExtractor={(item) => `${item.EmployeeId}`}
-				contentContainerStyle={{
-					paddingLeft: 16,
-					paddingRight: 16,
-				}}
-			></FlatList>
+			<View>
+				
+				<Button title={'Thêm nhân viên'}></Button>
+                <FlatList
+					data={employees}
+					renderItem={({ item }) => (
+						<EmployeeListItem
+							employee={item}
+							onPress={() =>
+								navigation.navigate("Employee", { employee: item })
+							}
+						/>
+					)}
+					keyExtractor={(item) => `${item.EmployeeId}`}
+					contentContainerStyle={{
+						paddingLeft: 16,
+						paddingRight: 16,
+					}}
+				></FlatList>
+			</View>
 		);
 	}
 
 	async componentDidMount() {
-        let self = this;
+		let self = this;
 		try {
 			const { filter } = this.state;
-			var queryStr = Convert.objectToQueryString(filter)
+			var queryStr = Convert.objectToQueryString(filter);
 			var res = await axios.get(
-				// `${Config.BaseUrl}/api/v1/Employees/filter?${queryStr}`
-				`${Config.BaseUrl}/api/v1/Employees`
+				`${Config.BaseUrl}/api/v1/Employees/filter?${queryStr}`
+				// `${Config.BaseUrl}/api/v1/Employees`
 			);
-			const employees = res.data;
-            console.log(employees)
-			self.setState(() => { return {employees: employees}  });
+            // console.log(res.data.Data)
+			const employees = res.data.Data;
+			self.setState(() => {
+				return { employees: employees };
+			});
 		} catch (err) {
 			console.log(err);
 		}
