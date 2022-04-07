@@ -5,6 +5,7 @@ import EmployeeListItem from "../components/EmployeeListItem";
 import { PagingEnum } from "../commons/enums/paging.enum";
 import Convert from "../commons/utils/convert";
 import { Config } from "../config/config";
+import { ModeEnum } from "../commons/enums/mode.enum";
 
 export default class Category extends React.Component {
 	constructor(props) {
@@ -17,7 +18,7 @@ export default class Category extends React.Component {
 			filter: {
 				pageSize: PagingEnum.first,
 				pageNumber: 1,
-                departmentId: props.route.params.departmentId
+				departmentId: props.route.params.departmentId,
 			},
 		};
 	}
@@ -26,9 +27,11 @@ export default class Category extends React.Component {
 		const { employees } = this.state;
 		return (
 			<View>
-				
-				<Button title={'Thêm nhân viên'}></Button>
-                <FlatList
+				<Button
+					title={"Thêm nhân viên"}
+					onPress={() => navigation.navigate("AddEmployee", {mode: ModeEnum.add})}
+				></Button>
+				<FlatList
 					data={employees}
 					renderItem={({ item }) => (
 						<EmployeeListItem
@@ -57,7 +60,7 @@ export default class Category extends React.Component {
 				`${Config.BaseUrl}/api/v1/Employees/filter?${queryStr}`
 				// `${Config.BaseUrl}/api/v1/Employees`
 			);
-            // console.log(res.data.Data)
+			// console.log(res.data.Data)
 			const employees = res.data.Data;
 			self.setState(() => {
 				return { employees: employees };

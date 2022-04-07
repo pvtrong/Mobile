@@ -7,7 +7,8 @@ import AppNavigator from './AppNavigator';
 import Category from './screens/Category';
 import Employee from './screens/Employee';
 import Categories from './screens/Categories';
-
+import AddEmployee from './screens/AddEmployee';
+import Toast from 'react-native-toast-message';
 function App() {
   return (
     <NavigationContainer>
@@ -16,7 +17,9 @@ function App() {
         <AppNavigator.Screen name="Phòng ban" component={Categories} />
         <AppNavigator.Screen name="Category" component={Category} />
         <AppNavigator.Screen name="Employee" component={Employee} />
+        <AppNavigator.Screen name="AddEmployee" component={AddEmployee} />
       </AppNavigator.Navigator>
+      <Toast />
     </NavigationContainer>
   );
 }
