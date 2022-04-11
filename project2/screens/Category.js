@@ -6,53 +6,40 @@ import { PagingEnum } from "../commons/enums/paging.enum";
 import Convert from "../commons/utils/convert";
 import { Config } from "../config/config";
 import { ModeEnum } from "../commons/enums/mode.enum";
-import { useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
+
 
 export default function Category(props) {
 	const [employees, setEmployees] = useState([]);
-	const [pageSize, setPageSize] = useState(PagingEnum.first);
-	const [pageNumber, setPageNumber] = useState(1);
-	const [departmentId, setDepartmentId] = useState(
-		props.route.params.departmentId
+	const [_limit, setLimit] = useState(PagingEnum.first);
+	const [_page, setPage] = useState(1);
+	const [_sort, setSort] = useState('EmployeeCode');
+	const [_order, setOrder] = useState('asc');
+	const [activeSwipe, setActiveSwipe] = useState();
+	const [DepartmentId, setDepartmentId] = useState(
+		props.route.params.DepartmentId
 	);
-    
-    useFocusEffect(
-        React.useCallback(() => {
-          const unsubscribe = async function(){
-            try {
-                var queryStr = Convert.objectToQueryString({pageSize: pageSize, pageNumber: pageNumber, departmentId: departmentId});
-                var res = await axios.get(
-                    `${Config.BaseUrl}/api/v1/Employees/filter?${queryStr}`
-                );
-                const employees = res.data.Data;
-                setEmployees(employees);
-            } catch (err) {
-                console.log(err);
-            }
-          }
-    
-          return () => unsubscribe();
-        },)
-      );
-	useEffect(async () => {
-		let mounted = true;
-		props.navigation.setOptions({
-			title: props.route.params.name,
-		});
-		// Update the document title using the browser API
-		let self = this;
-		try {
-			var queryStr = Convert.objectToQueryString({pageSize: pageSize, pageNumber: pageNumber, departmentId: departmentId});
+    const isFocused = useIsFocused();
+    const reloadScreen = async function(){
+        try {
+			var queryStr = Convert.objectToQueryString({_limit: _limit, _page: _page, DepartmentId: DepartmentId, _sort: _sort, _order: _order});
 			var res = await axios.get(
-				`${Config.BaseUrl}/api/v1/Employees/filter?${queryStr}`
+				`${Config.BaseUrl}/employees?${queryStr}`
 			);
-			const employees = res.data.Data;
+			const employees = res.data;
 			setEmployees(employees);
+			setActiveSwipe(null);
 		} catch (err) {
 			console.log(err);
 		}
-		return () => (mounted = false);
-	});
+    }
+	useEffect(async () => {
+		props.navigation.setOptions({
+			title: props.route.params.name,
+		});
+        reloadScreen()
+	}, [isFocused, _limit  , _page, DepartmentId, _sort, _order]);
+    
 	return (
 		<View>
 			<Button
@@ -61,8 +48,8 @@ export default function Category(props) {
 					props.navigation.navigate("AddEmployee", {
 						mode: ModeEnum.add,
 						department: {
-							departmentName: props.route.params.name,
-							departmentId: departmentId,
+							DepartmentName: props.route.params.name,
+							DepartmentId: DepartmentId,
 						},
 					})
 				}
@@ -70,12 +57,15 @@ export default function Category(props) {
 			<FlatList
 				data={employees}
 				renderItem={({ item }) => (
-					<EmployeeListItem
-						employee={item}
-						onPress={() => props.navigation.navigate("Employee", { employee: item })}
-					/>
+                        <EmployeeListItem
+                        activeSwipe={activeSwipe}
+                        reloadScreen={reloadScreen}
+                            setActiveSwipe={(id) => {setActiveSwipe(id), console.log(id)}}
+                            employee={item}
+                            onPress={() => props.navigation.navigate("Employee", { employee: item })}
+                        />
 				)}
-				keyExtractor={(item) => `${item.EmployeeId}`}
+				keyExtractor={(item) => `${item.id}`}
 				contentContainerStyle={{
 					paddingLeft: 16,
 					paddingRight: 16,

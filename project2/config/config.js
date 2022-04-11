@@ -1,3 +1,3 @@
 export const Config = {
-    BaseUrl: 'http://amis.manhnv.net'
+    BaseUrl: 'http://192.168.179.1:3000'
 }

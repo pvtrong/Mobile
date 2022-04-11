@@ -9,6 +9,7 @@ import {
     TouchableOpacity
 } from "react-native";
 import { GenderEnum } from "../commons/enums/gender.enum";
+import Convert from "../commons/utils/convert";
 export default class Category extends React.Component {
 	constructor(props) {
 		super(props);
@@ -16,16 +17,19 @@ export default class Category extends React.Component {
 			title: props.route.params.employee.EmployeeName,
 		});
 	}
-
+    convertGenderName(Gender){
+        return Convert.convertGender(Gender)
+    }
 	render() {
+        let self = this;
 		const { route } = this.props;
 		let image;
-		switch (route.params.employee.Gender) {
-			case GenderEnum.female: {
+		switch (route.params.employee.Gender.toString()) {
+			case GenderEnum.female.toString(): {
 				image = require("../assets/image/woman.png");
 				break;
 			}
-			case GenderEnum.male: {
+			case GenderEnum.male.toString(): {
 				image = require("../assets/image/man.png");
 				break;
 			}
@@ -35,13 +39,15 @@ export default class Category extends React.Component {
 			}
 		}
 
+        
+
 		return (
 			<ScrollView>
 				{/* <TouchableOpacity activeOpacity={0.5} > */}
 				<View style={styles.employeeItem}>
 					<Image style={styles.employeeImage} source={image}></Image>
 					<View style={styles.employeeInfo}>
-						<Text style={styles.employeeName}>
+						<Text style={styles.EmployeeName}>
 							{route.params.employee.EmployeeName}
 						</Text>
 						<Text>{route.params.employee.PositionName ? route.params.employee.PositionName : 'Chưa có chức vụ'}</Text>
@@ -57,7 +63,7 @@ export default class Category extends React.Component {
 					></Image>
 					<Text style={styles.label}>{"Giới tính"}</Text>
 					<Text style={styles.text}>
-						{route.params.employee.GenderName}
+						{self.convertGenderName(route.params.employee.Gender)}
 					</Text>
 				</View>
 				<View style={styles.field}>
@@ -159,7 +165,7 @@ const styles = StyleSheet.create({
 		height: 24,
 		marginRight: 20,
 	},
-	employeeName: {
+	EmployeeName: {
 		fontWeight: "700",
         marginBottom: 8
 	},
