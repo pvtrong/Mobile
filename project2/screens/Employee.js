@@ -1,116 +1,128 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
 	View,
 	Text,
-	FlatList,
 	StyleSheet,
 	ScrollView,
 	Image,
-    TouchableOpacity
+	TouchableOpacity,
 } from "react-native";
-import { GenderEnum } from "../commons/enums/gender.enum";
+import { ModeEnum } from "../commons/enums/mode.enum";
 import Convert from "../commons/utils/convert";
-export default class Category extends React.Component {
-	constructor(props) {
-		super(props);
-		props.navigation.setOptions({
-			title: props.route.params.employee.EmployeeName,
-		});
-	}
-    convertGenderName(Gender){
-        return Convert.convertGender(Gender)
-    }
-	render() {
-        let self = this;
-		const { route } = this.props;
-		let image;
-		switch (route.params.employee.Gender.toString()) {
-			case GenderEnum.female.toString(): {
-				image = require("../assets/image/woman.png");
-				break;
-			}
-			case GenderEnum.male.toString(): {
-				image = require("../assets/image/man.png");
-				break;
-			}
-			default: {
-				image = require("../assets/image/man.png");
-				break;
-			}
+import { useIsFocused } from "@react-navigation/native";
+import axios from "axios";
+import { Config } from "../config/config";
+
+export default function Employee(props) {
+	const isFocused = useIsFocused();
+	const [employee, setEmployee] = useState();
+	const { route, navigation } = props;
+	console.log(navigation.navigate);
+
+	useEffect(async () => {
+		try {
+			var res = await axios.get(
+				`${Config.BaseUrl}/employees/${props.route.params.employeeId}`
+			);
+			console.log(res.data);
+			setEmployee(res.data);
+		} catch (err) {
+			console.log(err);
 		}
+	}, [isFocused]);
 
-        
+	useEffect(() => {
+		props.navigation.setOptions({
+			title: employee && employee.EmployeeName,
+		});
+	}, [employee]);
+	return (
+		<ScrollView>
+			{/* <TouchableOpacity activeOpacity={0.5} > */}
+			<View style={styles.employeeItem}>
+				<Image
+					style={styles.employeeImage}
+					source={Convert.convertImageGender(employee && employee.Gender)}
+				></Image>
+				<View style={styles.employeeInfo}>
+					<Text style={styles.EmployeeName}>
+						{employee && employee.EmployeeName}
+					</Text>
+					<Text>
+						{Convert.convertPosition(
+							employee && employee.PositionId,
+							route.params.positions
+						)}
+					</Text>
+				</View>
+				<TouchableOpacity
+					activeOpacity={0.5}
+					onPress={() =>
+						props.navigation.navigate("AddEmployee", {
+							mode: ModeEnum.edit,
+							employee: employee,
+							positions: route.params.positions,
+							departments: route.params.departments,
+						})
+					}
+				>
+					<Image
+						style={styles.icon2x}
+						source={require("../assets/icon/edit.png")}
+					></Image>
+				</TouchableOpacity>
+			</View>
+			<View style={styles.field}>
+				<Image
+					style={styles.icon}
+					source={require("../assets/icon/icon-gender.png")}
+				></Image>
+				<Text style={styles.label}>{"Giới tính"}</Text>
+				<Text style={styles.text}>
+					{Convert.convertGender(employee && employee.Gender)}
+				</Text>
+			</View>
+			<View style={styles.field}>
+				<Image
+					style={styles.icon}
+					source={require("../assets/icon/icon-code.png")}
+				></Image>
+				<Text style={styles.label}>{"Mã nhân viên"}</Text>
+				<Text style={styles.text}>{employee && employee.EmployeeCode}</Text>
+			</View>
+			<View style={styles.field}>
+				<Image
+					style={styles.icon}
+					source={require("../assets/icon/smartphone.png")}
+				></Image>
+				<Text style={styles.label}>{"Số điện thoại"}</Text>
+				<Text style={styles.text}>{employee && employee.PhoneNumber}</Text>
+			</View>
+			<View style={styles.field}>
+				<Image
+					style={styles.icon}
+					source={require("../assets/icon/mail.png")}
+				></Image>
+				<Text style={styles.label}>{"Email"}</Text>
+				<Text style={styles.text}>{employee && employee.Email}</Text>
+			</View>
+			<View style={styles.field}>
+				<Image
+					style={styles.icon}
+					source={require("../assets/icon/workspace.png")}
+				></Image>
+				<Text style={styles.label}>{"Phòng ban"}</Text>
+				<Text style={styles.text}>
+					{Convert.convertDepartment(
+						employee && employee.DepartmentId,
+						route.params.departments
+					)}
+				</Text>
+			</View>
 
-		return (
-			<ScrollView>
-				{/* <TouchableOpacity activeOpacity={0.5} > */}
-				<View style={styles.employeeItem}>
-					<Image style={styles.employeeImage} source={image}></Image>
-					<View style={styles.employeeInfo}>
-						<Text style={styles.EmployeeName}>
-							{route.params.employee.EmployeeName}
-						</Text>
-						<Text>{route.params.employee.PositionName ? route.params.employee.PositionName : 'Chưa có chức vụ'}</Text>
-					</View>
-                    <TouchableOpacity activeOpacity={0.5}>
-					<Image style={styles.icon2x} source={require("../assets/icon/edit.png")}></Image>
-                    </TouchableOpacity>
-				</View>
-				<View style={styles.field}>
-					<Image
-						style={styles.icon}
-						source={require("../assets/icon/icon-gender.png")}
-					></Image>
-					<Text style={styles.label}>{"Giới tính"}</Text>
-					<Text style={styles.text}>
-						{self.convertGenderName(route.params.employee.Gender)}
-					</Text>
-				</View>
-				<View style={styles.field}>
-					<Image
-						style={styles.icon}
-						source={require("../assets/icon/icon-code.png")}
-					></Image>
-					<Text style={styles.label}>{"Mã nhân viên"}</Text>
-					<Text style={styles.text}>
-						{route.params.employee.EmployeeCode}
-					</Text>
-				</View>
-				<View style={styles.field}>
-					<Image
-						style={styles.icon}
-						source={require("../assets/icon/smartphone.png")}
-					></Image>
-					<Text style={styles.label}>{"Số điện thoại"}</Text>
-					<Text style={styles.text}>
-						{route.params.employee.PhoneNumber}
-					</Text>
-				</View>
-                <View style={styles.field}>
-					<Image
-						style={styles.icon}
-						source={require("../assets/icon/mail.png")}
-					></Image>
-					<Text style={styles.label}>{"Email"}</Text>
-					<Text style={styles.text}>
-						{route.params.employee.Email}
-					</Text>
-				</View>
-				<View style={styles.field}>
-					<Image
-						style={styles.icon}
-						source={require("../assets/icon/workspace.png")}
-					></Image>
-					<Text style={styles.label}>{"Phòng ban"}</Text>
-					<Text style={styles.text}>
-						{route.params.employee.DepartmentName}
-					</Text>
-				</View>
-                
-				{/* </TouchableOpacity> */}
-			</ScrollView>
-		);
-	}
+			{/* </TouchableOpacity> */}
+		</ScrollView>
+	);
 }
 
 const styles = StyleSheet.create({
@@ -129,13 +141,13 @@ const styles = StyleSheet.create({
 		padding: 16,
 		flexDirection: "row",
 	},
-    employeeInfo: {
-        flex: 1,
-    },  
-    icon2x: {
-        width: 48,
+	employeeInfo: {
+		flex: 1,
+	},
+	icon2x: {
+		width: 48,
 		height: 48,
-    },
+	},
 	field: {
 		width: "100%",
 		alignItems: "center",
@@ -167,16 +179,16 @@ const styles = StyleSheet.create({
 	},
 	EmployeeName: {
 		fontWeight: "700",
-        marginBottom: 8
+		marginBottom: 8,
 	},
-    text: {
+	text: {
 		fontWeight: "700",
 	},
 	employeeJob: {
 		textTransform: "uppercase",
 		marginBottom: 8,
 	},
-    mb8: {
-        marginBottom: 8,
-    }
+	mb8: {
+		marginBottom: 8,
+	},
 });

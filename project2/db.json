@@ -1137,17 +1137,6 @@
       "CreatedTime": "2022-04-11 00:40:19 -0400"
     },
     {
-      "id": "bdd81c20-3a37-4405-9729-7cff3077c746",
-      "EmployeeCode": "NV-100",
-      "EmployeeName": "Mirabel Roan",
-      "Email": "mroan2r@state.tx.us",
-      "Gender": "0",
-      "PhoneNumber": "2259108861",
-      "DepartmentId": "11452b0c-768e-5ff7-0d63-eeb1d8ed8cef",
-      "PositionId": "107cb7f1-9244-4cb2-ba79-bd8efe8216d2",
-      "CreatedTime": "2022-04-11 00:40:19 -0400"
-    },
-    {
       "id": "43fd41a7-8c67-4668-a8e4-668660fa4a1f",
       "EmployeeCode": "NV-101",
       "EmployeeName": "Torre Denekamp",
@@ -1166,17 +1155,6 @@
       "Gender": "1",
       "PhoneNumber": "8966905863",
       "DepartmentId": "17120d02-6ab5-3e43-18cb-66948daf6128",
-      "PositionId": "107cb7f1-9244-4cb2-ba79-bd8efe8216d2",
-      "CreatedTime": "2022-04-11 00:40:19 -0400"
-    },
-    {
-      "id": "9496c9b2-dafe-4bcf-b93a-489cdfbd8366",
-      "EmployeeCode": "NV-103",
-      "EmployeeName": "Hort Eadon",
-      "Email": "headon2u@omniture.com",
-      "Gender": "0",
-      "PhoneNumber": "4874483711",
-      "DepartmentId": "11452b0c-768e-5ff7-0d63-eeb1d8ed8cef",
       "PositionId": "107cb7f1-9244-4cb2-ba79-bd8efe8216d2",
       "CreatedTime": "2022-04-11 00:40:19 -0400"
     },
@@ -1236,17 +1214,6 @@
       "CreatedTime": "2022-04-11 00:40:19 -0400"
     },
     {
-      "id": "77f8ce1d-f489-4ff6-a1dc-64e98dc6c334",
-      "EmployeeCode": "NV-109",
-      "EmployeeName": "Humfried Paolozzi",
-      "Email": "hpaolozzi30@cargocollective.com",
-      "Gender": "1",
-      "PhoneNumber": "9685939233",
-      "DepartmentId": "11452b0c-768e-5ff7-0d63-eeb1d8ed8cef",
-      "PositionId": "107cb7f1-9244-4cb2-ba79-bd8efe8216d2",
-      "CreatedTime": "2022-04-11 00:40:19 -0400"
-    },
-    {
       "id": "f0ee8e5b-d302-4a10-9d8e-043346b53a53",
       "EmployeeCode": "NV-110",
       "EmployeeName": "Kahaleel Lashford",
@@ -1280,15 +1247,16 @@
       "CreatedTime": "2022-04-11 00:40:20 -0400"
     },
     {
-      "id": "40489bec-1607-4775-8e73-3c3cff916f8b",
       "EmployeeCode": "NV-113",
       "EmployeeName": "Ariana Woodward",
       "Email": "awoodward34@ebay.co.uk",
-      "Gender": "2",
       "PhoneNumber": "9855335858",
+      "Gender": 0,
       "DepartmentId": "11452b0c-768e-5ff7-0d63-eeb1d8ed8cef",
       "PositionId": "e4c392c3-5363-4c6a-83d8-8dd25d730810",
-      "CreatedTime": "2022-04-11 00:40:20 -0400"
+      "CreatedTime": "2022-04-11 00:40:20 -0400",
+      "ModifiedTime": "2022-04-11T10:01:45.504Z",
+      "id": "40489bec-1607-4775-8e73-3c3cff916f8b"
     },
     {
       "id": "0a2b95f5-c045-4d3e-af80-d3fc7ae608ed",

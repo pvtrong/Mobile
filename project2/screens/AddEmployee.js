@@ -12,7 +12,9 @@ import { GenderConstant } from "../commons/constants/gender.constant";
 import { Picker } from "@react-native-picker/picker";
 import { GenderEnum } from "../commons/enums/gender.enum";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { useIsFocused } from '@react-navigation/native';
 export default function AddEmployee(props) {
+    const isFocused = useIsFocused();
 	const [EmployeeCode, setEmployeeCode] = useState(null);
 	const [EmployeeName, setEmployeeName] = useState("");
 	const [PhoneNumber, setPhoneNumber] = useState("088888888");
@@ -34,26 +36,16 @@ export default function AddEmployee(props) {
 			value: GenderEnum.other,
 		},
 	]);
-    const [positions, setPositions] = useState([]);
     const [PositionId, setPositionId] = useState([]);
-    useEffect(async () => {
-        props.navigation.setOptions({
-			title: "Thêm nhân viên mới",
-		});
-		// Update the document title using the browser API
-        try {
-            var res = await axios.get(
-                `${Config.BaseUrl}/positions`
-            );
-            setPositions(res.data);
-        } catch (err) {
-            console.log(err);
-        }
-	}, []);
+    const [DepartmentId, setDepartmentId] = useState([]);
 
-    useEffect(() => {
-		setPositionId(positions && positions.length > 0 && positions[0].PositionId)
-	}, [positions]);
+    const {positions, departments} = props.route.params;
+
+    useEffect(async () => {
+		props.navigation.setOptions({
+			title: props.route.params.mode === ModeEnum.add ? 'Thêm nhân viên' : 'Sửa nhân viên',
+		});
+	}, [isFocused]);
 
 	useEffect(async () => {
 		
@@ -64,7 +56,6 @@ export default function AddEmployee(props) {
 					var res = await axios.get(
 						`${Config.BaseUrl}/employees?_limit=1&_page=1&_sort=CreatedTime&_order=desc`
 					);
-                    console.log("Lấy mã nv thành công", res.data[0])
 						setEmployeeCode('NV-' + (parseInt(res.data[0].EmployeeCode.split('NV-')[1]) + 1));
 						setEmployeeName('');
 						setEmail('');
@@ -74,11 +65,54 @@ export default function AddEmployee(props) {
 				} catch (err) {
 					console.log(err);
 				}
+                break;
+			}
+            case ModeEnum.edit: {
+				setEmployeeCode(props.route.params.employee.EmployeeCode)
+				setEmployeeName(props.route.params.employee.EmployeeName)
+				setEmail(props.route.params.employee.Email)
+				setPhoneNumber(props.route.params.employee.PhoneNumber)
+				setGender(props.route.params.employee.Gender)
+				setPositionId(props.route.params.employee.PositionId)
+				setDepartmentId(props.route.params.employee.DepartmentId)
+                break;
 			}
 		}
 	}, [props.route.params, reload]);
 
-    
+    let editEmployee = async function() {
+        let employee = {
+            EmployeeCode: EmployeeCode,
+            EmployeeName: EmployeeName,
+            Email: Email,
+            PhoneNumber: PhoneNumber,
+            Gender: Gender,
+            DepartmentId: DepartmentId,
+            PositionId: PositionId,
+            CreatedTime: props.route.params.employee.CreatedTime,
+            ModifiedTime: new Date()
+        }
+        console.log(employee)
+        try {
+            var res = await axios.put(
+                `${Config.BaseUrl}/employees/${props.route.params.employee.id}`, employee
+            );
+            console.log(res.data)
+            setReload(prev => !prev);
+            Toast.show({
+                type: 'success',
+                text1: 'Sửa nhân viên thành công!'
+              });
+            props.navigation.goBack()
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const submit = function(){
+        props.route.params.mode == ModeEnum.add ? addEmployee() : editEmployee()
+    }
+
     let addEmployee = async function() {
         let employee = {
             EmployeeCode: EmployeeCode,
@@ -86,7 +120,7 @@ export default function AddEmployee(props) {
             Email: Email,
             PhoneNumber: PhoneNumber,
             Gender: Gender,
-            DepartmentId: props.route.params.department.DepartmentId,
+            DepartmentId: DepartmentId,
             PositionId: PositionId,
             id: Convert.broofa(),
             CreatedTime: new Date()
@@ -137,7 +171,6 @@ export default function AddEmployee(props) {
 						selectedValue={Gender}
 						onValueChange={(itemValue, itemIndex) => {
 							setGender(itemValue);
-                            setGenderName(Genders[itemIndex].label)
 						}}
 						style={{ fontWeight: "bold" }}
 					>
@@ -190,15 +223,32 @@ export default function AddEmployee(props) {
 						}}
 						style={{ fontWeight: "bold" }}
 					>
-						{positions.map((x, index) => (
-							<Picker.Item key={index} label={x.PositionName} value={x.PositionId} />
+						{positions&& positions.length > 0 && positions.map((x) => (
+							<Picker.Item key={x.PositionId} label={x.PositionName} value={x.PositionId} />
+						))}
+					</Picker>
+				</View>
+			</View>
+            <View style={styles.formControl}>
+				<Text style={styles.label}>Phòng ban</Text>
+
+				<View style={styles.select}>
+					<Picker
+						selectedValue={DepartmentId}
+						onValueChange={(itemValue, itemIndex) => {
+							setDepartmentId(itemValue);
+						}}
+						style={{ fontWeight: "bold" }}
+					>
+						{departments && departments.length > 0 &&departments.map((x, index) => (
+							<Picker.Item key={index} label={x.DepartmentName} value={x.DepartmentId} />
 						))}
 					</Picker>
 				</View>
 			</View>
 			<Button
-				title="Thêm"
-				onPress={() => addEmployee()
+				title={props.route.params.mode === ModeEnum.add ? 'Thêm' : 'Sửa'}
+				onPress={() => submit()
 				}
 			></Button>
 			{/* <Button title="Thêm" ></Button> */}
