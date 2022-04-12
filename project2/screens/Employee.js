@@ -63,6 +63,7 @@ export default function Employee(props) {
 							employee: employee,
 							positions: route.params.positions,
 							departments: route.params.departments,
+                            reloadScreen: props.route.params.reloadScreen
 						})
 					}
 				>

@@ -1,26 +1,27 @@
 import React, { useEffect, useState }  from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 import EmployeeListItem from "../EmployeeListItem";
 import axios from "axios";
-
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { Config } from "../../config/config";
 import { ModeEnum } from "../../commons/enums/mode.enum";
 
-export default function SearchModel({ visible, data, notFound }) {
+export default function SearchModel({ visible, data, notFound, reloadScreen }) {
+    const navigation = useNavigation() 
+	const [activeSwipe, setActiveSwipe] = useState(null);
+	const [positions, setPositions] = useState([]);
+	const [departments, setDepartments] = useState([]);
+    const isFocused = useIsFocused(false);
+	useEffect(() => {
+        if (!visible) return null;
 
-	const [activeSwipe, setActiveSwipe] = useState();
-	const [positions, setPositions] = useState();
-	const [departments, setDepartments] = useState();
-    const isFocused = useIsFocused();
-	if (!visible) return null;
+        if (!visible && data.length === 0 && !notFound) return null;
 
-	if (!visible && data.length === 0 && !notFound) return null;
-
-	if (notFound) return <View>
-        <Text>{notFound}</Text>;
-    </View> 
-
+        if (notFound) return <View>
+            <Text>{notFound}</Text>;
+        </View> 
+        console.log(notFound)
+    }, [visible, notFound, data])
     useEffect(async () => {
 		try {
 			var res = await axios.get(`${Config.BaseUrl}/positions`);
@@ -28,48 +29,61 @@ export default function SearchModel({ visible, data, notFound }) {
 		} catch (err) {
 			console.log(err);
 		}
-        axios
-			.get(`${Config.BaseUrl}/departments`)
-			.then((resp) => {
-				const departments = resp.data;
-				setDepartments(departments);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+        try {
+			var departmentRes = await axios .get(`${Config.BaseUrl}/departments`)
+			setDepartments(departmentRes.data);
+		} catch (err) {
+			console.log(err);
+		}
 	}, []);
 
 	return (
-		<View>
-			<ScrollView>
-				{data.map((item) => (
+		<View style={styles.model} >
+			<FlatList
+				data={data}
+				renderItem={({ item }) => (
 					<EmployeeListItem
 						positions={positions}
 						departments={departments}
 						onEdit={() => {
-							props.navigation.navigate("AddEmployee", {
-								mode: ModeEnum.edit,
-								employee: item,
-								positions: positions,
-								departments: departments,
-							});
-						}}
+                            navigation.navigate("AddEmployee", {
+							mode: ModeEnum.edit,
+							employee: item,
+							positions: positions,
+							departments: departments,
+                            reloadScreen: reloadScreen
+						})}}
 						activeSwipe={activeSwipe}
-						// reloadScreen={reloadScreen}
+						reloadScreen={reloadScreen}
 						setActiveSwipe={(id) => {
 							setActiveSwipe(id), console.log(id);
 						}}
 						employee={item}
 						onPress={() =>
-							props.navigation.navigate("Employee", {
+							navigation.navigate("Employee", {
 								employeeId: item.id,
 								positions: positions,
 								departments: departments,
+                                reloadScreen: reloadScreen
 							})
 						}
-					></EmployeeListItem>
-				))}
-			</ScrollView>
+					/>
+				)}
+				keyExtractor={(item) => `${item.id}`}
+				contentContainerStyle={{
+					paddingLeft: 16,
+					paddingRight: 16,
+				}}
+			></FlatList>
 		</View>
 	);
 }
+const styles = StyleSheet.create({
+    
+model:{
+    paddingTop: 10,
+    flex: 1,
+    paddingBottom: 10
+}, 
+})
+ 

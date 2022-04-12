@@ -19,6 +19,8 @@ export default function Category(props) {
 	const [DepartmentId, setDepartmentId] = useState(
 		props.route.params.DepartmentId
 	);
+
+    
 	const { route } = props;
 	const isFocused = useIsFocused();
 	const reloadScreen = async function () {
@@ -44,7 +46,7 @@ export default function Category(props) {
 			title: props.route.params.name,
 		});
 		reloadScreen();
-	}, [isFocused, _limit, _page, DepartmentId, _sort, _order]);
+	}, [ _limit, _page, DepartmentId, _sort, _order]);
 
 	useEffect(async () => {
 		try {
@@ -66,6 +68,7 @@ export default function Category(props) {
 						DepartmentId: DepartmentId,
 						departments: props.route.params.departments,
 						positions: positions,
+                        reloadScreen: reloadScreen
 					})
 				}
 			></Button>
@@ -81,6 +84,7 @@ export default function Category(props) {
 							employee: item,
 							positions: positions,
 							departments: props.route.params.departments,
+                            reloadScreen: reloadScreen,
 						})}}
 						activeSwipe={activeSwipe}
 						reloadScreen={reloadScreen}
@@ -93,6 +97,7 @@ export default function Category(props) {
 								employeeId: item.id,
 								positions: positions,
 								departments: props.route.params.departments,
+                                reloadScreen: reloadScreen
 							})
 						}
 					/>

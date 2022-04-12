@@ -47,6 +47,7 @@ export default function AddEmployee(props) {
 		});
 	}, [isFocused]);
 
+    console.log(props.route.params)
 	useEffect(async () => {
 		
 		// Update the document title using the browser API
@@ -107,6 +108,7 @@ export default function AddEmployee(props) {
         } catch (err) {
             console.log(err);
         }
+        props.route.params.reloadScreen();
     }
 
     const submit = function(){
@@ -139,6 +141,7 @@ export default function AddEmployee(props) {
         } catch (err) {
             console.log(err);
         }
+        props.route.params.reloadScreen();
     }
 	return (
         <ScrollView>
