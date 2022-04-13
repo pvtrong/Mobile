@@ -51,7 +51,7 @@ function App() {
 	) : (
 		<NavigationContainer>
 			<AppNavigator.Navigator initialRouteName="Login">
-			<AppNavigator.Screen name="Login" component={Login} />
+			<AppNavigator.Screen name="Login" children={()=><Login setIsSignedIn={setIsSignedIn}/>}/>
 			{/* <AppNavigator.Screen name="SignUp" component={SignUp} /> */}
 		</AppNavigator.Navigator>
 		</NavigationContainer>

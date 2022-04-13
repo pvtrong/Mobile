@@ -1249,14 +1249,14 @@
     },
     {
       "EmployeeCode": "NV-113",
-      "EmployeeName": "Ariana Woodwardaa",
+      "EmployeeName": "Ariana Woodwardaaa",
       "Email": "awoodward34@ebay.co.uk",
       "PhoneNumber": "9855335858",
       "Gender": 0,
       "DepartmentId": "11452b0c-768e-5ff7-0d63-eeb1d8ed8cef",
       "PositionId": "e4c392c3-5363-4c6a-83d8-8dd25d730810",
       "CreatedTime": "2022-04-11 00:40:20 -0400",
-      "ModifiedTime": "2022-04-12T14:24:32.660Z",
+      "ModifiedTime": "2022-04-13T01:20:07.537Z",
       "id": "40489bec-1607-4775-8e73-3c3cff916f8b"
     },
     {
@@ -11032,6 +11032,11 @@
       "email": "olivier@mail.com",
       "password": "$2a$10$GLh3r9woP22ErjmIF/l1qOv/4j6Qf1TEpAUlJHgoNY7Mkv.ownOda",
       "id": 1
+    },
+    {
+      "email": "trongpv@gmail.com",
+      "password": "$2a$10$XZ0CXWkvHinA3sLC0Mxse.c88KrAGoQP3x7O0OKnkIydstv1eTQhm",
+      "id": 2
     }
   ]
 }
