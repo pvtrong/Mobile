@@ -16,11 +16,12 @@ export default function Login() {
  
   return (
     <View style={styles.container}>
-      {/* <Image style={styles.image} source={require("./assets/log2.png")} /> */}
+      <Image style={styles.image} source={require("../assets/image/logo.png")} />
  
       <StatusBar style="auto" />
       <View style={styles.inputView}>
         <TextInput
+        autoFocus={true}
           style={styles.TextInput}
           placeholder="Email."
           placeholderTextColor="#003f5c"
@@ -52,35 +53,37 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFF",
     alignItems: "center",
     justifyContent: "center",
   },
  
   image: {
     marginBottom: 40,
+    height: 150,
+    width: 150
   },
  
   inputView: {
-    backgroundColor: "#FFC0CB",
-    borderRadius: 30,
-    width: "70%",
     height: 45,
     marginBottom: 20,
- 
-    alignItems: "center",
+    width: "100%",
+    paddingHorizontal: 20,
   },
  
   TextInput: {
+    borderColor: "#ccc",
+    borderRadius: 4,
+    borderWidth: 1,
     height: 50,
     flex: 1,
-    padding: 10,
+    paddingHorizontal: 16,
     marginLeft: 20,
   },
  
   forgot_button: {
     height: 30,
-    marginBottom: 30,
+    color: "#40BFFF"
   },
  
   loginBtn: {
@@ -90,6 +93,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 40,
-    backgroundColor: "#FF1493",
+    backgroundColor:  "#40BFFF",
   },
+  loginText: {
+      color: "#fff"
+  }
 });

@@ -11,13 +11,14 @@ import Search from "./screens/Search";
 import Login from "./screens/Login";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { LogBox } from "react-native";
+import AppNavigator from "./AppNavigator";
 
 LogBox.ignoreLogs([
 	"Non-serializable values were found in the navigation state",
 ]);
 
 function App() {
-    const [isSignedIn, setIsSignedIn] = useState(true);
+    const [isSignedIn, setIsSignedIn] = useState(false);
 
 	return isSignedIn ? (
 		<NavigationContainer>
@@ -49,8 +50,10 @@ function App() {
 		</NavigationContainer>
 	) : (
 		<NavigationContainer>
-			<TabNavigator.Screen name="Login" component={Login} />
-			{/* <Stack.Screen name="SignUp" component={SignUpScreen} /> */}
+			<AppNavigator.Navigator initialRouteName="Login">
+			<AppNavigator.Screen name="Login" component={Login} />
+			{/* <AppNavigator.Screen name="SignUp" component={SignUp} /> */}
+		</AppNavigator.Navigator>
 		</NavigationContainer>
 	);
 }

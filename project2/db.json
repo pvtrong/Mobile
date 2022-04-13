@@ -11026,5 +11026,12 @@
       "ModifiedBy": null,
       "ModifiedTime": null
     }
+  ],
+  "users": [
+    {
+      "email": "olivier@mail.com",
+      "password": "$2a$10$GLh3r9woP22ErjmIF/l1qOv/4j6Qf1TEpAUlJHgoNY7Mkv.ownOda",
+      "id": 1
+    }
   ]
 }
